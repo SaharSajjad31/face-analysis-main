@@ -1,0 +1,126 @@
+
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="containerana">
+    <div class="anaone">
+        <h1>Complete Analysis</h1>
+        <p class="pana"><b>Image ID:</b> {{ image_obj.id }}</p>
+        <img src="{{ image_obj.image.url }}" alt="Activity User" style="width: 200px;">
+        <p><b>Date Created:</b> {{ image_obj.created_at }}</p>
+    </div>
+
+   
+    <div class="anatwo">
+        <h3>Detailed Analysis Data:</h3>
+        {% if analysis_data %}
+            {% for data in image_obj.data %}
+                <p class="anapp"><b class="anabb">Dominant Gender👫:</b> {{ data.dominant_gender }}</p>
+                <p class="anapp"><b class="anabb">Dominant Race:🙎🏾‍♂️</b> {{ data.dominant_race }}</p>
+                <p class="anapp"><b class="anabb">Dominant Emotion:😐</b> {{ data.dominant_emotion }}</p>
+                <p class="anapp"><b class="anabb">Age:⏳</b> {{ data.age }}</p>
+                <p class="anapp"><b class="anabb">Face Confidence:👨🏻‍🦳</b> {{ data.face_confidence }}</p>
+                
+              
+                <p><b class="anabb">Race Details:🙎🏾‍♂️</b></p>
+                <ul class="ulana">
+                    {% for race_key, race_value in data.race.items %}
+                        <li class="anapp liana">{{ race_key.capitalize }}: {{ race_value|floatformat:2 }}</li>
+                    {% endfor %}
+                </ul>
+                
+             
+                <p><b class="anabb">Emotion Details:😐</b></p>
+                <ul class="ulana">
+                    {% for emotion_key, emotion_value in data.emotion.items %}
+                        <li class="anapp liana">{{ emotion_key.capitalize }}: {{ emotion_value|floatformat:10 }}</li>
+                    {% endfor %}
+                </ul>
+
+               <div>
+               
+               </div>
+
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>No detailed analysis data available.</p>
+        {% endif %}
+    </div>
+
+ 
+   
+</div>
+<div>
+    <h3>Analysis Summary</h3>
+
+    {% if analysis_data %}
+    {% for data in image_obj.data %}
+
+    <p class="paraana" style="font-size: 30px;color:#04a9f5">
+        <span style="color:black">"</span>
+        This photo indicates that the person is a <strong>{{ data.dominant_gender }}</strong> 
+        with an approximate age of <strong>{{ data.age }}</strong> and is more likely to be 
+        a <strong>{{ data.dominant_race }}</strong> ethinic with the picture indicating 
+        <strong>{{ data.dominant_emotion }}</strong> emotion and confidence of 
+        <strong>{{ data.face_confidence }}</strong>.<span style="color:black">"</span>
+    </p>
+   
+<a class="btn btn-primary m-0" href="{% url 'display_images' dominant_race=data.dominant_race dominant_gender=data.dominant_gender %}" target="_blank">See Reccomemded Type of Cloting</a>
+
+
+
+
+{% if images %}
+
+{% else %}
+    <p>.</p>
+{% endif %}
+
+    {% endfor %}
+    {% else %}
+        <p>No detailed analysis data available.</p>
+    {% endif %}
+  
+    
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dataValues = document.querySelectorAll('.data-value');
+
+        dataValues.forEach(function (dataElement) {
+            try {
+                const jsonString = dataElement.textContent.trim().replace(/'/g, '"');
+                const jsonDataArray = JSON.parse(jsonString);
+
+                if (Array.isArray(jsonDataArray)) {
+                    jsonDataArray.forEach(function (jsonData) {
+                        
+                    });
+                }
+
+            } catch (error) {
+                console.error("Error processing data element:", error);
+            }
+        });
+    });
+
+  
+fetch('/display-images/')
+.then(response => response.json())
+.then(data => {
+    console.log(data); 
+})
+.catch(error => {
+    console.error('Error fetching images:', error);
+});
+
+    <script async src="https://cse.google.com/cse.js?cx=473b70e0d3a084643">
+    </script>
+
+    
+    
+    
+</script>
+{% endblock content %}

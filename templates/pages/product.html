@@ -1,0 +1,70 @@
+{% extends 'layouts/base.html' %}
+{% load static crispy_forms_tags %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="row">
+        <!--[ Recent Images Section ] start-->
+        <div class="col-12">
+            <div class="card Recent-Images">
+                <div class="card-header">
+                    <h5>Recent Images</h5>
+                </div>
+                <div class="card-block px-0 p-3">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                <b>{{ message.tags|title }}!</b> {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% crispy form %}
+                    </form>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover mt-3">
+                            <tbody>
+                                {% for obj in object_list %}
+                                    <tr class="image-entry">
+                                        <td>
+                                            <img class="rounded-circle" style="width:40px;" src="{{ obj.image.url }}" alt="activity-user">
+                                        </td>
+                                        <td>
+                                            <h6 class="text-muted"><i class="fas fa-circle text-c-green f-10 m-r-15"></i>{{ obj.created_at }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6 class="text-muted data-value"><i class="fas fa-circle text-c-green f-10 m-r-15"></i>{{ obj.data }}</h6>
+                                        </td>
+                                        <td>
+                                            <a class="px-2" href="{% url 'img_del' obj.pk %}"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--[ Recent Images Section ] end-->
+
+        <script>
+            // Access and log obj.data for each row
+            document.addEventListener('DOMContentLoaded', function () {
+                const dataValues = document.querySelectorAll('.data-value');
+
+                dataValues.forEach(function (dataElement) {
+                    const data = dataElement.textContent.trim();
+                    console.log(data); // Log obj.data for each row
+                });
+            });
+        </script>
+    </div>
+    <!-- [ Main Content ] end -->
+{% endblock content %}

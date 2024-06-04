@@ -1,0 +1,22 @@
+
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <h1>Reccomemded Clothing based on Your Facial data</h1>
+    <div class="image-container">
+        {% if image_links %}
+            {% for link in image_links %}
+            <span><h4>Source:</h4><a href="{{link}}" target="_blank">{{link}}</a></span>
+            <a href="{{link}}" target="_blank">
+                <img class="borderimg" src="{{ link }}" alt="Google Image">
+            </a>
+            {% endfor %}
+            End of the Page
+        {% else %}
+            <p>No images found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+{% endblock content %}

@@ -1,0 +1,113 @@
+{% extends 'layouts/base.html' %}
+{% load static crispy_forms_tags %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+   
+    <div class="row">
+       
+        <div class="col-12">
+            <div class="card Recent-Images">
+                <div class="card-header">
+                    <h5>Recent Images</h5>
+                </div>
+                <div class="card-block px-0 p-3">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                <b>{{ message.tags|title }}!</b> {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% crispy form %}
+                    </form>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover mt-3">
+                            <tbody>
+                                {% for obj in object_list %}
+                                    <tr class="image-entry">
+                                      
+                                        <td colspan="5">
+                                            <span><h4>Analysis For</h4><span >Picture# {{ obj.id }}</span></span>
+                                        </td>
+                                    </tr>
+                                    <tr class="image-entry">
+                                        <td>
+                                            <img class="rounded-circle" style="width:40px;" src="{{ obj.image.url }}" alt="activity-user">
+                                        </td>
+                                        <td>
+                                            <h6 class="text-muted"><i class="fas fa-circle text-c-green f-10 m-r-15"></i>{{ obj.created_at }}</h6>
+                                        </td>
+                                        <td class="data-value" style="display: none;">{{ obj.data }}</td>
+                                        <td>
+                                            <a class="px-2" href="{% url 'img_del' obj.pk %}"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary m-0" style="color:'red !important';" href="{% url 'analysis' obj.pk %}" target="_blank">See Complete Analysis</a>
+                                        </td>
+                                    </tr>
+                                    
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+  
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dataValues = document.querySelectorAll('.data-value');
+
+            dataValues.forEach(function (dataElement) {
+                try {
+                    const jsonString = dataElement.textContent.trim().replace(/'/g, '"');
+                    const jsonDataArray = JSON.parse(jsonString);
+
+                    if (Array.isArray(jsonDataArray)) {
+                        jsonDataArray.forEach(function (jsonData) {
+                            const dominantGender = jsonData.dominant_gender;
+                            const dominantRace = jsonData.dominant_race;
+                            const dominantEmotion = jsonData.dominant_emotion;
+                            const age = jsonData.age;
+                            const faceConfidence = jsonData.face_confidence;
+
+                         
+                            const genderElement = document.createElement('p');
+                            genderElement.innerHTML = `<b>Dominant Gender:</b> ${dominantGender}`;
+                            dataElement.parentNode.appendChild(genderElement);
+
+                            const raceElement = document.createElement('p');
+                            raceElement.innerHTML = `<b>Dominant Race:</b> ${dominantRace}`;
+                            dataElement.parentNode.appendChild(raceElement);
+
+                            const emotionElement = document.createElement('p');
+                            emotionElement.innerHTML = `<b>Dominant Emotion:</b> ${dominantEmotion}`;
+                            dataElement.parentNode.appendChild(emotionElement);
+
+                            const ageElement = document.createElement('p');
+                            ageElement.innerHTML = `<b>Age:</b> ${age}`;
+                            dataElement.parentNode.appendChild(ageElement);
+
+                            const confidenceElement = document.createElement('p');
+                            confidenceElement.innerHTML = `<b>Face Confidence:</b> ${faceConfidence}`;
+                            dataElement.parentNode.appendChild(confidenceElement);
+                        });
+                    }
+
+                } catch (error) {
+                    console.error("Error processing data element:", error);
+                }
+            });
+        });
+    </script>
+{% endblock content %}
